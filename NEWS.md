@@ -1,5 +1,7 @@
 # leaflet (development version)
 
+* Add a `measuredelete` event listener with attributes `points`.
+
 # leaflet 2.2.2
 
 * Fixed #893: Correctly call `terra::crs()` when checking the CRS of a `SpatVector` object in `pointData()` or `polygonData()` (thanks @mkoohafkan, #894).
