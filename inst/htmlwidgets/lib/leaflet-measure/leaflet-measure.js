@@ -6539,9 +6539,9 @@ module.exports = {
 module.exports = {
   'measure': 'Measure',
   'measureDistancesAndAreas': 'Measure distances and areas',
-  'createNewMeasurement': 'Create a new measurement',
-  'startCreating': 'Start creating a measurement by adding points to the map',
-  'finishMeasurement': 'Finish measurement',
+  'createNewMeasurement': 'Create a new area of interest',
+  'startCreating': 'Start creating an area of interest by adding points to the map',
+  'finishMeasurement': 'Finish area of interest',
   'lastPoint': 'Last point',
   'area': 'Area',
   'perimeter': 'Perimeter',
@@ -7305,6 +7305,7 @@ L.Control.Measure = L.Control.extend({
   },
   // clear all running measure data
   _clearMeasure: function () {
+    console.log(this._latlngs)
     this._latlngs = [];
     this._resultsModel = null;
     this._measureVertexes.clearLayers();
