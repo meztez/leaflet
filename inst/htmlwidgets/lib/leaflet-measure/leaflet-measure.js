@@ -7104,6 +7104,59 @@ L.Control.Measure = L.Control.extend({
     map.off('click', this._collapse, this);
     map.removeLayer(this._layer);
   },
+  addPolygons: function(latlngs) {
+    var calced, resultFeature, popupContainer, popupContent, zoomLink, deleteLink;
+
+    if (latlngs.length < 3) {
+      return;
+    }
+
+    calced = calc.measure(latlngs);
+    
+    resultFeature = L.polygon(latlngs, this._symbols.getSymbol('resultArea'));
+    popupContent = areaPopupTemplate({
+      model: _.extend({}, calced, this._getMeasurementDisplayStrings(calced)),
+      humanize: humanize,
+      i18n: i18n
+    });
+
+    popupContainer = L.DomUtil.create('div', '');
+    popupContainer.innerHTML = popupContent;
+
+    zoomLink = $('.js-zoomto', popupContainer);
+    if (zoomLink) {
+      L.DomEvent.on(zoomLink, 'click', L.DomEvent.stop);
+      L.DomEvent.on(zoomLink, 'click', function () {
+        if (resultFeature.getBounds) {
+          this._map.fitBounds(resultFeature.getBounds(), {
+            padding: [20, 20],
+            maxZoom: 17
+          });
+        } else if (resultFeature.getLatLng) {
+          this._map.panTo(resultFeature.getLatLng());
+        }
+      }, this);
+    }
+
+    deleteLink = $('.js-deletemarkup', popupContainer);
+    if (deleteLink) {
+      L.DomEvent.on(deleteLink, 'click', L.DomEvent.stop);
+      L.DomEvent.on(deleteLink, 'click', function () {
+        // TODO. maybe remove any event handlers on zoom and delete buttons?
+        var model = _.extend({}, {points: latlngs});
+        this._layer.removeLayer(resultFeature);
+        this._map.fire('measuredelete', model, false);
+      }, this);
+    }
+
+    resultFeature.addTo(this._layer);
+    resultFeature.bindPopup(popupContainer, this.options.popupOptions);
+    if (resultFeature.getBounds) {
+      resultFeature.openPopup(resultFeature.getBounds().getCenter());
+    } else if (resultFeature.getLatLng) {
+      resultFeature.openPopup(resultFeature.getLatLng());
+    }
+  },
   _initLayout: function () {
     var className = this._className, container = this._container = L.DomUtil.create('div', className);
     var $toggle, $start, $cancel, $finish;

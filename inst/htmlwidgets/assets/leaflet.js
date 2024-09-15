@@ -2547,6 +2547,12 @@ methods.removeMeasure = function () {
   }
 };
 
+methods.addMeasurePolygons = function (latlngs) {
+  if (this.measureControl) {
+    this.measureControl.addPolygons(latlngs)
+  }
+};
+
 methods.addSelect = function (ctGroup) {
   var _this8 = this;
 
