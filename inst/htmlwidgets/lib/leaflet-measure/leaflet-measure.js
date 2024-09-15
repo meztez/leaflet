@@ -7305,7 +7305,6 @@ L.Control.Measure = L.Control.extend({
   },
   // clear all running measure data
   _clearMeasure: function () {
-    console.log(this._latlngs)
     this._latlngs = [];
     this._resultsModel = null;
     this._measureVertexes.clearLayers();
